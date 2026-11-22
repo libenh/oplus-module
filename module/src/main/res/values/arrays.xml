@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="xposed_scope">
+        <item>android</item>
+        <item>com.xiaomi.xmsf</item>
+        <item>com.coolapk.market</item>
+        <item>com.tencent.mobileqq</item>
+        <item>com.tencent.mm</item>
+    </string-array>
+</resources>
