@@ -4,47 +4,41 @@
 
 - **不需要全局伪装** 成 MIUI
 - Hook 目标应用 MiPush SDK，强制走系统级 `com.xiaomi.xmsf`
-- 禁用应用自带 `XMPushService`，减少双通道
-- ColorOS 17：bindService 改走 startService
-- 注册 15s 超时无回传会在 LSPosed 日志打出明确提示
+- 禁用应用自带 `XMPushService`
+- ColorOS 17：bindService 偏向 startService
+- 注册 15s 超时在 LSPosed 日志提示
 
-## 安装
+## 下载 APK（GitHub Actions）
 
-1. 编译或使用 Release APK 安装
-2. LSPosed 中启用模块
-3. 作用域至少勾选：
-   - `android`（系统框架）
-   - `com.xiaomi.xmsf`（若已安装推送服务）
-   - 需要推送的目标应用（酷安、QQ 等）
-4. 重启手机
-5. 打开目标应用，在 LSPosed 日志过滤 `[OPush]`
+1. 打开 [Actions](https://github.com/libenh/oplus-module/actions)
+2. 选最新一次 **Build** 成功记录
+3. 底部 **Artifacts** 下载 `OPush-APKs`
+4. 解压安装 `module-debug.apk` 或 release
 
-## 日志关键字
+也可在 Actions 页点 **Run workflow** 手动触发编译。
 
-| 日志 | 含义 |
-|------|------|
-| `register REQUESTED` | 应用发起了注册 |
-| `REGISTER TIMEOUT` | 15s 内无结果，需检查 xmsf |
-| `block XMPushService` | 已拦截应用自建长连接 |
-| `bindService -> redirect startService` | C17 下已改走 startService |
+## 安装使用
 
-## 依赖
+1. 安装 APK
+2. LSPosed 启用模块
+3. 作用域勾选：`android`、`com.xiaomi.xmsf`（若有）、目标 App
+4. 重启 → 打开目标 App
+5. LSPosed 日志过滤 `[OPush]`
 
-仍需配合 **推送服务 APK**（`com.xiaomi.xmsf`，可来自 MiPushFramework 的 xmsf）。  
-本模块负责让应用把注册/消息走系统通道，不替代 xmsf 本体。
+需配合 **xmsf 推送服务**（MiPushFramework 的 com.xiaomi.xmsf）。
 
-## 构建
+## 本地编译
 
 ```bash
-./gradlew :module:assembleDebug
+# 需 JDK 17 +已安装 Gradle 8.9，或用 Android Studio 打开
+gradle :module:assembleDebug
 ```
 
-## 状态
+## 日志
 
-- [x] 模块入口 + O系检测
-- [x] Hook registerPush + 注册超时
-- [x] 拦截应用 XMPushService
-- [x] bind -> startService（O系）
-- [x] MIUI 检查绕过
-- [ ] 与 xmsf 深度联调 / 强制注册结果回传
-- [ ] 管理界面
+| 关键字 | 含义 |
+|--------|------|
+| register REQUESTED | 发起注册 |
+| REGISTER TIMEOUT | 15s 无回传 |
+| block XMPushService | 已拦截自建服务 |
+| bindService -> redirect | O系改 startService |

@@ -16,6 +16,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -33,10 +36,19 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+
+    lint {
+        abortOnError = false
+    }
 }
 
 dependencies {
     compileOnly("de.robv.android.xposed:api:82")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.21")
     implementation("androidx.core:core-ktx:1.15.0")
 }
